@@ -1,0 +1,127 @@
+XAML
+<Window.ContextMenu>
+    <ContextMenu>
+        <MenuItem Header="Exit" Click="Close_Click"/>
+    </ContextMenu>
+</Window.ContextMenu>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CS
+private void ChangeVolumeByStep(object sender, MouseWheelEventArgs e)
+{
+    //Step Volume
+    float step = 0.02f;
+            
+    //Volume Interface
+    var mmde = new MMDeviceEnumerator();
+    MMDevice defaultDevice = mmde.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+            
+    //Current Volume (0-1)
+    float currentVolumeScalar = defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar;
+
+    //New Volume (0-1)
+    float newVolumeScalar = currentVolumeScalar;
+
+    if (e.Delta > 0)
+    {
+        //Mouthwheel Up. The volume has to be 1 or below.
+        newVolumeScalar = Math.Min(1, currentVolumeScalar + step);
+    }
+    else if (e.Delta < 0)
+    {
+        //Mouthwheel Down. The volume has to be 0 or above.
+        newVolumeScalar = Math.Max(0, currentVolumeScalar - step);
+    }
+
+    //Update
+    defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar = newVolumeScalar;
+    ReadVolumes();
+}
+
+
+/// <summary>
+/// Drag to move the main window.
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
+private void ClickAndDrag(object sender, MouseButtonEventArgs e)
+{
+    DragMove();
+}
+
+
+/// <summary>
+/// Context Menu Methods
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
+private void Close_Click(object sender, RoutedEventArgs e)
+{
+    //Close the app when you click "Exit"
+    this.Close();
+}
+
+
+
+***Main Window***
+//Drag to move window
+MouseLeftButtonDown += new MouseButtonEventHandler(ClickAndDrag);
+
+//Locate window at the bottom right
+Rect desktopWorkingArea = SystemParameters.WorkArea;
+this.Left = desktopWorkingArea.Right - this.Width;
+this.Top = desktopWorkingArea.Bottom - this.Height;
+
+
+***ReadVolumes()***
+//dt.Rows.Add("Device Increment (dB)", device.AudioEndpointVolume.VolumeRange.IncrementDecibels.ToString());
+//dt.Rows.Add("Hardware Support?", device.AudioMeterInformation.HardwareSupport.ToString());
+//dt.Rows.Add("Session Counts", device.AudioSessionManager.Sessions.Count.ToString());
+//dt.Rows.Add("Session Simple Volume?", device.AudioSessionManager.SimpleAudioVolume.Volume.ToString());
+
+
+//dt.Rows.Add(prefix + "isMute", session.SimpleAudioVolume.Mute.ToString());
+//dt.Rows.Add(prefix + "isSystem", session.IsSystemSoundsSession.ToString());
+//dt.Rows.Add(prefix + "Name", session.DisplayName);
+//dt.Rows.Add(prefix + "State", session.State.ToString());
+//dt.Rows.Add(prefix + "Peak Values Count", session.AudioMeterInformation.PeakValues.Count.ToString());
+//dt.Rows.Add(prefix + "Peak Values", session.AudioMeterInformation.PeakValues[0].ToString());
+
+
+
+
+
+
+Notes
+/*
+     今後の予定
+     - 音量調節バーを作る
+     - Stats for nerdsで細かい数字表示
+     - アプリケーションごとの音量調節
+*/
+
+//defaultDevice.AudioEndpointVolume.StepInformation.Step;
+//defaultDevice.AudioEndpointVolume.StepInformation.StepCount;
+//defaultDevice.AudioEndpointVolume.StepInformation.ToString();
+//float currentVolumeDB = defaultDevice.AudioEndpointVolume.MasterVolumeLevel; This threw an error when db was lower than the minDecibels
+//defaultDevice.AudioSessionManager.Sessions[1].SimpleAudioVolume.Volume = 0.05f; //max1
+//SimpleAudioVolumeは、マスター音量を1として、0-1の範囲で調整できる。つまりマスターが6％であれば、1の設定だと全体の6%ということに。
+//マスター6％でアプリ0.1(10%)にしたときの音量は、マスターを0.6%にしたときと同じかもしれない。
+//これの証明には、マスター10%アプリ0.1、そしてマスター1%アプリ1が同じ音量であればよい。
+//アプリ0.05の場合はマスターが0.3%と同じ。マスターの最低値が0.7%であるから、アプリ音量を個別に変えることで限界突破できることが分かった。
+//一旦設定しておくと、アプリケーションを閉じても保存される様子。PC再起動したときにどうなるかは不明。
