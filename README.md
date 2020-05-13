@@ -27,6 +27,12 @@ With SimpleVolumeController, you can dive further than this limit.
 
 <br/>
 
+## License
+The NAudio library is under the Microsoft Public License (Ms-PL).\
+The remaining components are under the MIT License.
+
+<br/>
+
 ## Acknowledgement
 [NAudio](https://github.com/naudio/NAudio) - For the comprehensive library\
 [Degath](https://degathsducker.weebly.com/) - For helpful ideas and advice
