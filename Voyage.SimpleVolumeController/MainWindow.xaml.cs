@@ -76,7 +76,7 @@ namespace Voyage.SimpleVolumeController
                 dt.Rows.Add("Master Volume (Scalar 0-1)", device.AudioEndpointVolume.MasterVolumeLevelScalar.ToString());
                 dt.Rows.Add("Master Volume (Scalar 0-100)", (device.AudioEndpointVolume.MasterVolumeLevelScalar * 100).ToString() + "%");
                 dt.Rows.Add("Master Volume (dB)", device.AudioEndpointVolume.MasterVolumeLevel.ToString());
-                dt.Rows.Add("Master Volume Peak (dB)", device.AudioMeterInformation.MasterPeakValue.ToString());
+                dt.Rows.Add("Master Peak", device.AudioMeterInformation.MasterPeakValue.ToString());
 
                 //Data - Session Volume Info
                 for (int i = 0; i < device.AudioSessionManager.Sessions.Count; i++)
@@ -96,8 +96,8 @@ namespace Voyage.SimpleVolumeController
                     String prefix = "Session" + (i + 1) + " ";
                     dt.Rows.Add("----------", "----------");
                     dt.Rows.Add(prefix + "Name (Process ID)", processName + " (" + processID.ToString() + ")");
-                    dt.Rows.Add(prefix + "Volume (Scalar)", session.SimpleAudioVolume.Volume.ToString());
-                    dt.Rows.Add(prefix + "Master Peak", session.AudioMeterInformation.MasterPeakValue.ToString());
+                    dt.Rows.Add(prefix + "Volume (Scalar 0-1)", session.SimpleAudioVolume.Volume.ToString());
+                    dt.Rows.Add(prefix + "Peak", session.AudioMeterInformation.MasterPeakValue.ToString());
 
                 }
 
