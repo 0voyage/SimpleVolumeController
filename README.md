@@ -1,6 +1,6 @@
 # SimpleVolumeController
 
-![AppScreenshot](AppScreenshot.png)
+![Screenshot](Screenshot.png)
 
 This is a small application to quickly lower the master volume.\
 Scroll up or down on the specified area to double or halve the volume.\
